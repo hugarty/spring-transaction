@@ -1,7 +1,6 @@
 package com.example.demo.model.service;
 
 import java.time.LocalDateTime;
-import java.util.Random;
 
 import com.example.demo.model.Tabela;
 import com.example.demo.model.repository.TabelaRepository;
@@ -60,7 +59,7 @@ public class SaveService {
     private void saveNew(String methodName) {
         System.out.println("\n - - - "+ methodName +" - - -  \n");
         Tabela tabela = new Tabela();
-        tabela.setNome(methodName + new Random().nextInt(50));
+        tabela.setNome(methodName);
         tabela.setData(LocalDateTime.now());
         repository.save(tabela);
     }

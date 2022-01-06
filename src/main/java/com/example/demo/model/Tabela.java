@@ -1,6 +1,7 @@
 package com.example.demo.model;
 
 import java.time.LocalDateTime;
+import java.util.Random;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,6 +12,8 @@ import javax.persistence.Id;
 @Entity
 public class Tabela {
     
+    static final Random random = new Random();
+
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
@@ -26,7 +29,7 @@ public class Tabela {
     }
 
     public void setNome(String nome) {
-        this.nome = nome;
+        this.nome = nome + random.nextInt(100);
     }
 
     public LocalDateTime getData() {

@@ -33,7 +33,7 @@ public class UpdateService {
     }
 
     /**
-     * NÃO atualiza e não lança exceção.
+     * NÃO atualiza e não lança exceção.como 
      */
     @Transactional(readOnly = true)
     public void updateReadOnly () {
@@ -59,8 +59,8 @@ public class UpdateService {
 
     private void update(String methodName) {
         System.out.println("\n - - - " + methodName + " - - -  \n");
-        Tabela tabela = repository.findById(1).get();
-        tabela.setNome(methodName + new Random().nextInt(50));
+        Tabela tabela = repository.findTopByOrderByIdAsc();
+        tabela.setNome(methodName);
         tabela.setData(LocalDateTime.now());
         repository.save(tabela);
     }

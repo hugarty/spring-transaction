@@ -4,10 +4,13 @@ import java.io.IOException;
 
 import com.example.demo.model.Tabela;
 import com.example.demo.model.service.DeleteService;
-import com.example.demo.model.service.FindAndChangeNameService;
+import com.example.demo.model.service.FindAndChangeService;
 import com.example.demo.model.service.FindService;
 import com.example.demo.model.service.SaveService;
 import com.example.demo.model.service.UpdateService;
+import com.example.demo.model.service.innertransaction.InnerTransactionFindAndChangeService;
+import com.example.demo.model.service.outertransaction.OuterTransactionalUpdateService;
+import com.example.demo.model.service.outertransaction.OuterDefaultUpdateService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -22,7 +25,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 public class DemoApplication implements CommandLineRunner{
 
 	@Autowired
-	private FindAndChangeNameService findAndChangeNameService;
+	private FindAndChangeService findAndChangeNameService;
 	@Autowired
 	private FindService findService;
 	@Autowired
@@ -31,7 +34,12 @@ public class DemoApplication implements CommandLineRunner{
 	private UpdateService updateService;
 	@Autowired
 	private SaveService saveService;
-	
+	@Autowired
+	private OuterTransactionalUpdateService outerTransactionService;
+	@Autowired
+	private OuterDefaultUpdateService outerDefaultService;
+	@Autowired
+	private InnerTransactionFindAndChangeService innerTransactionService;
 
 	public static void main(String[] args) throws IOException {
 		SpringApplication.run(DemoApplication.class, args).close();
@@ -39,65 +47,59 @@ public class DemoApplication implements CommandLineRunner{
 
 	@Override
 	public void run(String... args) throws Exception {
-		System.out.println("\n - - - \n");
-
-		// findAndChangeNameService.changeNameTransacional();
-		// findAndChangeNameService.changeNamePropagationNever();
-		findAndChangeNameService.changeNameDefault();
-
-		// findService.findDefault();
-		// findService.findDefault();
-		// findService.findReadOnly();
-		// findService.findPropagationNotSupported();
-		// findService.findPropagationNever();
+		System.out.println("\n - - RUN - - \n");
 		
-		// saveService.saveDefault();
-		// saveService.saveTransactional();
-		// // saveService.saveReadOnly(); Lança exceção.
-		// saveService.savePropagationNever();
-		// saveService.savePropagationNotSupported();
+		// saveService
+		saveService.saveDefault();		// Salva
+		saveService.saveTransactional();		// Salva
+		// saveService.saveReadOnly();			// Lança Exceção
+		saveService.savePropagationNever();	// Salva
+		saveService.savePropagationNotSupported();	// Salva
 
-
-
-		updateService.updateReadOnly();
-
-		// deleteService.deleteNotSupported(); // todo testar
+		// findAndChangeNameService
+		findAndChangeNameService.changeNameDefault(); 		// Não altera
+		findAndChangeNameService.changeNameTransacional(); 	// Altera
+		findAndChangeNameService.changeNameReadOnly();		// Não altera
+		findAndChangeNameService.changeNamePropagationNotSupported();	// Não altera
+		findAndChangeNameService.changeNamePropagationNever();	// Não altera
 		
+		// findService
+		findService.findDefault();		// Recuperou
+		findService.findTransactional();	// Recuperou
+		findService.findReadOnly();		// Recuperou
+		findService.findPropagationNotSupported();	// Recuperou
+		findService.findPropagationNever();	// Recuperou
 
+		// // updateService
+		updateService.updateDefault();		// Altera
+		updateService.updateTransactional();	// Altera
+		updateService.updateReadOnly();		// Não altera
+		updateService.updatePropagationNotSupported();	// Altera
+		updateService.updatePropagationNever();		// Altera
 
-		//tabelaService.saveReadOnly(); //org.postgresql.util.PSQLException: ERROR: cannot execute INSERT in a read-only transaction
+		// // innerTransactionService
+		innerTransactionService.updateFindReadOnly();		// Altera
+		innerTransactionService.updateFindPropagationNotSupported();	// Altera
+		innerTransactionService.updateFindPropagationNever();	// Altera
 
-		// tabelaService.update();
+		// outerTransactionService
+		outerTransactionService.updateReadOnly();		// Altera
+		outerTransactionService.updatePropagationNotSupported();	// Não altera
+		// outerTransactionService.updatePropagationNever();	// Lança exceção
 
-		// tabelaService.update();
-		// userService.updateReadOnly();
-		// userService.updatePropagationNotSupported();
-		// try {
-		// 	userService.updatePropagationNever();
-		// } catch (Exception e) {
-		// 	System.out.println(" # Lançou Exceção - " + e.getClass().getSimpleName() + ": "+ e.getMessage());
-		// }
+		// outerDefaultService
+		outerDefaultService.updateReadOnly();	// Não altera
+		outerDefaultService.updatePropagationNotSupported();	// Não altera
+		outerDefaultService.updatePropagationNever();		// Não altera
 
-		// userService.noUpdateReadOnly();
-		// userService.noUpdatePropagationNotSupported();
-		// userService.noUpdatePropagationNever();	
-
-		// tabelaService.deleteReadOnly();
-
-		// tabelaService.deleteNever();
-		// tabelaService.deleteNotSupported();
+		// deleteService
+		deleteService.deleteDefault();		// Deleta
+		deleteService.deleteTransactional();	// Deleta
+		deleteService.deleteReadOnly();		// Não deleta
+		deleteService.deleteNotSupported();	// Deleta
+		deleteService.deleteNever();		// Deleta
 
 		System.out.println("\n - - END - - \n");
-
-		// TODO implementar dois métodos salvar que após a transação acabar deve ter um break point, 
-		// quero olhar o log e ver qual dos dois salvou de fato no banco a alteração que fizemos
-
-		// TODO implementar dois metodos delete para a transação acima
-
-
-		// TODO Implementar um método que é transacional default chamando um outro método que é transactional read only, 
-		// alterar o dado dentro do método transactional default e ver se ele sofre alteração no banco.
-
 	}
 
 }
