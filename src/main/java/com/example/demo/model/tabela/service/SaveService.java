@@ -1,9 +1,9 @@
-package com.example.demo.model.service;
+package com.example.demo.model.tabela.service;
 
 import java.time.LocalDateTime;
 
-import com.example.demo.model.Tabela;
-import com.example.demo.model.repository.TabelaRepository;
+import com.example.demo.model.tabela.Tabela;
+import com.example.demo.model.tabela.repository.TabelaRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,8 +19,8 @@ public class SaveService {
     /**
      * Salva normalmente.
      */
-    public void saveDefault () {
-		saveNew("saveDefault");
+    public Integer saveDefault () {
+		return saveNew("saveDefault");
     }
 
     /**
@@ -56,12 +56,13 @@ public class SaveService {
 		saveNew("savePropagationNotSupported");
     }
 
-    private void saveNew(String methodName) {
+    private Integer saveNew(String methodName) {
         System.out.println("\n - - - "+ methodName +" - - -  \n");
         Tabela tabela = new Tabela();
         tabela.setNome(methodName);
         tabela.setData(LocalDateTime.now());
-        repository.save(tabela);
+        Tabela save = repository.save(tabela);
+        return save.getId();
     }
 
 }

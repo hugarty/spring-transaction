@@ -1,7 +1,7 @@
-package com.example.demo.model.service;
+package com.example.demo.model.tabela.service;
 
-import com.example.demo.model.Tabela;
-import com.example.demo.model.repository.TabelaRepository;
+import com.example.demo.model.tabela.Tabela;
+import com.example.demo.model.tabela.repository.TabelaRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,14 +18,14 @@ public class DeleteService {
      * Deleta normal
      */
     public void deleteDefault () {
-        findLastAndDelete();
+        findLastAndDelete("deleteDefault");
     }
     /**
      * Deleta normal
      */
     @Transactional
     public void deleteTransactional () {
-        findLastAndDelete();
+        findLastAndDelete("deleteTransactional");
     }
 
     /**
@@ -33,7 +33,7 @@ public class DeleteService {
      */
     @Transactional(readOnly = true)
     public void deleteReadOnly () {
-        findLastAndDelete();
+        findLastAndDelete("deleteReadOnly");
     }
 
     /** 
@@ -41,7 +41,7 @@ public class DeleteService {
      */
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public void deleteNotSupported () {
-        findLastAndDelete();
+        findLastAndDelete("deleteNotSupported");
     }
 
     /** 
@@ -49,10 +49,11 @@ public class DeleteService {
      */
     @Transactional(propagation = Propagation.NEVER)
     public void deleteNever () {
-        findLastAndDelete();
+        findLastAndDelete("deleteNever");
     }
 
-    private void findLastAndDelete() {
+    private void findLastAndDelete(String methodName) {
+        System.out.print("\n\n - - - "+methodName+" - - - \n\n");
         Tabela tabela = repository.findTopByOrderByIdDesc();
         System.out.println(tabela);
         repository.delete(tabela);

@@ -1,8 +1,8 @@
-package com.example.demo.model.service;
+package com.example.demo.model.tabela.service;
 
 
-import com.example.demo.model.Tabela;
-import com.example.demo.model.repository.TabelaRepository;
+import com.example.demo.model.tabela.Tabela;
+import com.example.demo.model.tabela.repository.TabelaRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,9 +43,24 @@ public class FindService {
     }
 
     private Tabela find (String methodName) {
-        System.out.print("\n\n - - - "+ methodName+" - - -\n\n");
+        System.out.print("\n\n - - - " + methodName + " - - -\n\n");
         Tabela tabela = repository.findTopByOrderByIdAsc();
         System.out.println(tabela);
         return tabela;
+    }
+
+    /**
+     * Lança exceção
+     */
+    // public Tabela findQueryAnnotationLazy (Integer id) { 
+    //     System.out.print("\n\n - - - findQueryAnnotationLazy - - -\n\n");
+    //     Tabela recuperarLazy = repository.recuperarLazy(id);
+    //     return recuperarLazy;
+    // }
+
+    public Tabela findQueryAnnotationEager () {
+        System.out.print("\n\n - - - findQueryAnnotationEager - - -\n\n");
+        Tabela recuperarEager = repository.recuperarEager();
+        return recuperarEager;
     }
 }

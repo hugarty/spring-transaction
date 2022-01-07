@@ -1,9 +1,9 @@
-package com.example.demo.model.service.innertransaction;
+package com.example.demo.model.tabela.service.innertransaction;
 
 import org.springframework.stereotype.Service;
 
-import com.example.demo.model.Tabela;
-import com.example.demo.model.repository.TabelaRepository;
+import com.example.demo.model.tabela.Tabela;
+import com.example.demo.model.tabela.repository.TabelaRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
